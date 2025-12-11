@@ -11,9 +11,9 @@ palabraSecreta = ""
 palabraProgreso = []
 vidas = 0
 letrasAdivinadas = set()
-historialPartidas = {}
 
-def seleccionar_palabra(): #Selecciona una palabra al azar de la lista
+
+def seleccionar_palabra(): 
     """Seleccionar una palabra al azar de la lista."""
     global palabraSecreta
     palabraSecreta = random.choice(palabras)
@@ -38,7 +38,7 @@ def inicializar_juego():
 
 def actualizar_interfaz():
     """
-    Actualiza lass etiquetas y el progreso de la palabra en la interfaz
+    Actualiza las etiquetas y el progreso de la palabra en la interfaz
     """
     etiquetaProgreso.config(text=" ".join(palabraProgreso))
     etiquetaLetrasIntentadas.config(text=f"Letras probadas: {", ".join(sorted(list(letrasAdivinadas)))}")
@@ -47,7 +47,7 @@ def dibujar_ahorcado():
     """
     Dibuja el ahorcado en el lienzo del canvas
     """
-    lienzo.delete("all")
+    lienzo.delete("all") #"all", le estás indicando al Canvas que borre absolutamente todos los elementos dibujados.
 
     # Base
     lienzo.create_line(50, altoCanvas - 20, 150, altoCanvas - 20, width=3) #Base del poste
@@ -94,8 +94,6 @@ def procesar_intento(letra):
     dibujar_ahorcado()
     verificar_fin_juego()
     
-
-
 def manejar_intento_boton(): 
     """
     Función llamada al hacer clic en el botón "intentar" 
@@ -158,7 +156,7 @@ def guardar_archivo():
 
 def guardar_estado_juego():
     """
-    Guarda el estado actual del juego (palabra, vidas, progreso, letras) en un archivo .txt.
+    Guarda el estado actual del juego (palabra, vidas, progreso y letras intentadas) en un archivo .txt.
     """
     global entradaArchivo, ventanaGuardar, vidas, palabraSecreta, palabraProgreso, letrasAdivinadas
 
@@ -186,6 +184,7 @@ def guardar_estado_juego():
         messagebox.showinfo("Guardar", f"Partida guardada como: {nombreArchivo}")
         ventanaGuardar.destroy()
     except Exception as e:
+        # Si ocurre cualquier error ('Exception'), se ejecuta este código
         messagebox.showerror("Error", f"No se pudo guardar el archivo. {e}")
 
 def cargar_estado_juego():
@@ -248,7 +247,8 @@ def cargar_estado_juego():
                                      bg="#c8e6c9")
     botonConfirmarCargar.pack(pady=10)
     
-    entradaArchivoCargar.focus_set()
+    entradaArchivoCargar.focus_set() #.focus_set() se asegura de que, en cuanto la ventana aparezca, el cursor parpadeante esté dentro de la caja de texto 
+    #y el usuario pueda empezar a escribir el nombre del archivo de inmediato.
     ventanaCargar.wait_window()
 
 ventana = tk.Tk()
@@ -302,22 +302,19 @@ botonCargarPartida = tk.Button(panel, text="Cargar Partida", command=cargar_esta
 botonCargarPartida.grid(row=11, column=0, columnspan=2, pady=(5, 0))
 
 
-#Boton salir
-def salir():
-    if messagebox.askyesno("¿Seguro que deseas salir del juego?"):
-     ventana.destroy()
-
-
-botonSalir = tk.Button(panel, text="Salir", command=salir, bg="#ffcdd2")
-botonSalir.grid(row=12, column=0, columnspan=2, pady=(5, 0))
-
-
-
 # Inicializar al cargar (deshabilitado hasta Nuevo Juego)
 botonIntentar.config(state=tk.DISABLED)
 entradaLetra.config(state=tk.DISABLED)
 actualizar_interfaz()
 dibujar_ahorcado()
+
+#Boton salir
+def salir():
+    if messagebox.askyesno("¿Seguro que deseas salir del juego?"):
+     ventana.destroy()
+
+botonSalir = tk.Button(panel, text="Salir", command=salir, bg="#ffcdd2")
+botonSalir.grid(row=12, column=0, columnspan=2, pady=(5, 0))
 
 ventana.protocol("WM_DELETE_WINDOW", salir) # Maneja el cierre con la X de la ventana
 ventana.mainloop()

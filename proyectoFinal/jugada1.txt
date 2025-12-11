@@ -1,0 +1,4 @@
+Palabra Secreta: python
+Vidas: 4
+Progreso: _____n
+Letras Intentadas: a,e,n
